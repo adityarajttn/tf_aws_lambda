@@ -1,11 +1,6 @@
 name: Code Delivery
 
 on:
-  # push:
-  #   branches: [ main ]
-  # pull_request:
-  #   branches: [ main ]
-
   workflow_dispatch:
     inputs:
       reason:
