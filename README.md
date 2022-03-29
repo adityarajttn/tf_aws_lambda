@@ -6,12 +6,12 @@ This repository contains Terraform configuration file to deploy AWS Lambda funct
 - `terraform_modules` folder contains terraform modules for lambda function.
 - `.github/workflows` folder contains GitHub Action workflow file to deploy lamda function.
 
-### Dependencies
+## Dependencies
 
 This Repository is dependent on [aws_lambda_cicd](https://github.com/adityarajttn/aws_lambda_cicd). Once docker image is build the only deploy the lambda function. 
 
 
-### - Authenticating to AWS
+## Authenticating to AWS
 
 Set the Acess key and secret key in the GitHub Action secrets with key as following.
 ```
