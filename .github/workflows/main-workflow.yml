@@ -1,36 +1,70 @@
-# This is a basic workflow to help you get started with Actions
+name: Code Delivery
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      reason:
+        type: choice
+        description: Choose AWS Reason
+        options:
+        - us-east-1
+        - ap-south-1
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+      image_tag:
+        type: choice
+        description: Choose Docker Image Tag
+        options:
+        - latest
+        - v1
+        - v2
+
+      repository_name:
+        description: 'ECR repository name'
+        required: false
+        default: "aws_lambda_cicd"
+
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  terraform:
+    name: "Update Lambda function"
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ github.event.inputs.reason }}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.10
+
+      - name: Terraform Init
+        id: init
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          echo -e "repository_name = \"${REPOSITORY_NAME}\"\n" >> terraform.auto.tfvars
+          echo -e "image_tag = \"${IMAGE_TAG}\"\n" >> terraform.auto.tfvars
+          echo -e "region = \"${AWS_REGION}\"\n" >> terraform.auto.tfvars
+          terraform init
+        env:
+          REPOSITORY_NAME: ${{ github.event.inputs.repository_name }}
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+          AWS_REGION: ${{ github.event.inputs.reason }}
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan
+
+      # - name: Terraform Apply
+      #   run: |
+      #     terraform apply -auto-approve
