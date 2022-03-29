@@ -19,7 +19,7 @@ on:
         - v2
 
       repository_name:
-        description: 'ECR repository name'
+        description: 'ECR name'
         required: false
         default: "aws_lambda_cicd"
 
