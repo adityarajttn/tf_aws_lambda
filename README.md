@@ -19,10 +19,13 @@ AWS_ACCESS_KEY_ID:  ATDJKSSCXHGSJAXXXX
 AWS_SECRET_ACCESS_KEY: 678ygshGD765rhsbvdwdhsg87
 ```
 
-
 ## Quick start
 
 1. Go to Actions section.
 2. Click on `Run workflow`
 3. Input the values as per your need.
 4. Run the workflow.
+
+## Workflow Diagram
+
+<img align="center" alt="Img" src="./AWS_Lambda_CICD.png" width="700" height="500" />
