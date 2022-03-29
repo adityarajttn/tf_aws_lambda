@@ -28,4 +28,4 @@ AWS_SECRET_ACCESS_KEY: 678ygshGD765rhsbvdwdhsg87
 
 ## Workflow Diagram
 
-<img align="center" alt="Img" src="./AWS_Lambda_CICD.png" width="700" height="500" />
+<img align="center" alt="Img" src="./AWS_Lambda_CICD.png" width="800" height="500" />
